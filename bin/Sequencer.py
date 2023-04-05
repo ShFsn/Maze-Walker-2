@@ -22,7 +22,7 @@ class Sequencer:
     def call(self, key):
         if self._state == 'TitleScreen':
             self._call_title_screen(key)
-        if self._state == 'StartMenu':
+        elif self._state == 'StartMenu':
             self._call_start_menu(key)
 
     def _change_state(self, next_state):
