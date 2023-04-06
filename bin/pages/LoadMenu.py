@@ -4,14 +4,13 @@ from bin.pages.SavesMenu import SavesMenu
 class LoadMenu(SavesMenu):
     def __init__(self):
         super().__init__()
-        self._saves = list()
-        self.contents.append('')
         self.contents.append('Press [Backspace] to go back')
+        self._saves = list()
 
     def get_contents(self, maze):
         if self._showed:
             return tuple()
-        self.contents[0] = 'Choose save cell (' + ('singleplayer' if maze.is_single() else 'multiplayer') + '):\n'
+        super().get_contents(maze)
         path = 'saves/' + ('single/' if maze.is_single() else 'multi/') + 'save_'
         self._saves = list()
         for i in range(5):

@@ -4,6 +4,7 @@ from bin.pages.TitleScreen import TitleScreen
 from bin.pages.ModeMenu import ModeMenu
 from bin.pages.MazeTypeMenu import MazeTypeMenu
 from bin.pages.LoadMenu import LoadMenu
+from bin.pages.WriteMenu import WriteMenu
 from bin.pages.GamePage import GamePage
 
 """if key == '':
@@ -25,6 +26,7 @@ class Sequencer:
         self._mode_menu = ModeMenu()
         self._maze_type_menu = MazeTypeMenu()
         self._load_menu = LoadMenu()
+        self._write_menu = WriteMenu()
         self._game_page = GamePage()
 
     def call(self, key):
@@ -36,6 +38,8 @@ class Sequencer:
             self._call_page(self._maze_type_menu, key)
         elif self._state == 'LoadMenu':
             self._call_page(self._load_menu, key)
+        elif self._state == 'WriteMenu':
+            self._call_page(self._write_menu, key)
         elif self._state == 'GamePage':
             self._call_page(self._game_page, key)
 
@@ -49,6 +53,9 @@ class Sequencer:
         if next_state != '':
             if next_state == 'prev':
                 next_state = self._state_prev.pop()
+            elif next_state == 'restart':
+                while next_state != 'ModeMenu':
+                    next_state = self._state_prev.pop()
             else:
                 self._state_prev.append(self._state)
             self._state = next_state

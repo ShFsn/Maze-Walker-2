@@ -26,12 +26,17 @@ class GamePage(Page):
             self._showed = False
         if key == '1' or (key == '2' and not maze.is_single()):
             maze.show_path(key)
+            self._showed = False
         if key in self._move_keys:
             if maze.is_single() and key in self._move_keys[4:]:
                 pass
             else:
                 maze.hide_path()
-                ...
+                self._showed = False
+        if key == Key.backspace:
+            maze.hide_path()
+            maze.set_timer(self._timer)
+        ...
 
     def get_contents(self, maze):
         if self._showed:
@@ -49,6 +54,11 @@ class GamePage(Page):
                              'Show solution for: [1]' + ('' if maze.is_single() else ' / [2]') + '\n\n'
                              '[Backspace] to save and go to menu')
         return tuple(self.contents)
+
+    def get_next_state(self, key):
+        if key == Key.backspace:
+            return 'WriteMenu'
+        return ''
 
     def exit(self):
         super().exit()

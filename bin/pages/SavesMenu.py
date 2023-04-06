@@ -7,6 +7,10 @@ class SavesMenu(Page):
     def __init__(self):
         super().__init__()
         self._check_saves()
+        self.contents.append('')
+
+    def get_contents(self, maze):
+        self.contents[0] = 'Choose save cell (' + ('singleplayer' if maze.is_single() else 'multiplayer') + '):\n'
 
     def get_next_state(self, key):
         res = super().get_next_state(key)

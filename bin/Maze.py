@@ -3,10 +3,10 @@ from bin.Player import Player
 
 class Maze:
     def __init__(self):
-        self._width = 0
         self._height = 0
-        self._act_width = 0
+        self._width = 0
         self._act_height = 0
+        self._act_width = 0
         self._matrix = list()
         self._end_point = (0, 0)
         self._timer = 0
@@ -42,6 +42,9 @@ class Maze:
     def get_timer(self):
         return self._timer
 
+    def set_timer(self, timer):
+        self._timer = timer
+
     def show_path(self, key):
         print('show path')
         ...
@@ -52,10 +55,10 @@ class Maze:
 
     def load(self, save):
         s_cont = save.split('\n')
-        self._width = int(s_cont[0])
-        self._act_width = self._width * 2 + 1
-        self._height = int(s_cont[1])
+        self._height = int(s_cont[0])
         self._act_height = self._height * 2 + 1
+        self._width = int(s_cont[1])
+        self._act_width = self._width * 2 + 1
         self._player_1.set_pos(int(s_cont[2]), int(s_cont[3]))
         self._player_2.set_pos(int(s_cont[4]), int(s_cont[5]))
         self._end_point = (int(s_cont[6]), int(s_cont[7]))
@@ -65,6 +68,23 @@ class Maze:
             self._matrix.append(list())
             for j in range(self._act_height):
                 self._matrix[i].append(int(s_cont[i + 9][j]))
+
+    def get_data(self):
+        data = ''
+        data += str(self._height) + '\n'
+        data += str(self._width) + '\n'
+        data += str(self._player_1.get_pos()[0]) + '\n'
+        data += str(self._player_1.get_pos()[1]) + '\n'
+        data += str(self._player_2.get_pos()[0]) + '\n'
+        data += str(self._player_2.get_pos()[1]) + '\n'
+        data += str(self._end_point[0]) + '\n'
+        data += str(self._end_point[1]) + '\n'
+        data += str(self._timer)
+        for i in self._matrix:
+            data += '\n'
+            for j in i:
+                data += str(j)
+        return data
 
     def get_picture(self):
         string_matrix = ''
