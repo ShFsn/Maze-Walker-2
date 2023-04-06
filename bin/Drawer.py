@@ -1,15 +1,15 @@
-import bin.ScreenObj as So
+from bin.ScreenObj import ScreenObj
 import sys
 
 
 class Screen:
     def __init__(self):
-        (self._win_w, self._win_h) = self._get_win_size()
+        (self._win_w, self._win_h) = self.get_win_size()
         self._draw_pool = tuple()
         self._redraw = True
 
     @staticmethod
-    def _get_win_size():
+    def get_win_size():
         import shutil
         return shutil.get_terminal_size()  # pass fallback
         # os.terminal_size(columns=87, lines=23)  # returns a named-tuple
@@ -17,7 +17,7 @@ class Screen:
     def _update_win_size(self):
         pass
         _win_w, _win_h = self._win_w, self._win_h
-        (self._win_w, self._win_h) = self._get_win_size()
+        (self._win_w, self._win_h) = self.get_win_size()
         if _win_w != self._win_w or _win_h != self._win_h:
             self._redraw = True
 
@@ -39,19 +39,19 @@ class Screen:
         sum_height = 0
         max_width = 0
         for i in draw_pool:
-            obj = So.ScreenObj()
+            obj = ScreenObj()
             obj.set_obj(i)
             objs.append(obj)
             max_width = obj.get_size()[0] if obj.get_size()[0] > max_width else max_width
             sum_height += obj.get_size()[1]
         if max_width + 2 > self._win_w or sum_height + len(objs) + 1 > self._win_h:
             objs = list()
-            obj = So.ScreenObj()
+            obj = ScreenObj()
             obj.set_obj('Window size\nis too small')
             objs.append(obj)
             sum_height = obj.get_size()[1]
         output = self._compose(objs, sum_height)
-        print(output)
+        print(output, end='')
         sys.stdout.flush()
 
     def _compose(self, objs, sum_height):
@@ -61,6 +61,6 @@ class Screen:
             output += '\n' * space_height
             for i in range(obj.get_size()[1]):
                 output += '\n' + ' ' * ((self._win_w - obj.get_size()[0]) // 2) + obj.next_line()
-        space_height = self._win_h - sum_height - space_height * len(objs) - 1
+        space_height = self._win_h - sum_height - space_height * len(objs)
         output += '\n' * space_height
         return output

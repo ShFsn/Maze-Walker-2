@@ -12,19 +12,20 @@ class KBEventListener:
 
     def _on_press(self, key):
         # print('{0} pressed'.format(key))
-        if not self._pressed:
-            if type(key) == Key:
-                self._event = key
-            else:
-                self._event = key.char
-            self._pressed = True
+        # if not self._pressed:
+        if type(key) == Key:
+            self._event = key
+        else:
+            self._event = key.char
+        # self._pressed = True
 
     def _on_release(self, key):
         # print('{0} release'.format(key))
         if key == Key.esc:
             # Stop listener
-            self._listener.stop()
-        self._pressed = False
+            # self._listener.stop()
+            pass
+        # self._pressed = False
 
     def get_event(self):
         return self._event

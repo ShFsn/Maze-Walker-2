@@ -1,9 +1,9 @@
 from pynput.keyboard import Key
-import bin.KeyboardMgr as Kb
-import bin.Sequencer as Seq
+from bin.KeyboardMgr import KBEventListener
+from bin.Sequencer import Sequencer
 
-kb = Kb.KBEventListener()
-seq = Seq.Sequencer()
+kb = KBEventListener()
+seq = Sequencer()
 
 # main loop
 while True:

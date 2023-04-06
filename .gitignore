@@ -6,6 +6,9 @@ __pycache__/
 # IDE
 .idea/
 
+# Game saves
+saves/
+
 # C extensions
 *.so
 
