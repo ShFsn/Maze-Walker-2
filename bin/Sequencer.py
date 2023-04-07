@@ -7,14 +7,6 @@ from bin.pages.LoadMenu import LoadMenu
 from bin.pages.WriteMenu import WriteMenu
 from bin.pages.GamePage import GamePage
 
-"""if key == '':
-    ...
-elif type(key) == Key:
-    if key == Key.enter:
-        self._input = ''
-else:
-    self._input += key"""
-
 
 class Sequencer:
     def __init__(self):

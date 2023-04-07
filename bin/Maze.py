@@ -46,12 +46,47 @@ class Maze:
         self._timer = timer
 
     def show_path(self, key):
-        print('show path')
-        ...
+        wave_l = 11
+        flag = True
+        pos = self._player_1.get_pos() if key == '1' else self._player_2.get_pos()
+        self._matrix[pos[0]][pos[1]] = wave_l
+        while flag:
+            flag = False
+            for i in range(self._act_height):
+                for j in range(self._act_width):
+                    if self._matrix[i][j] == wave_l:
+                        self._matrix[i - 1][j] = wave_l + 1 if self._matrix[i - 1][j] == 0 else self._matrix[i - 1][j]
+                        self._matrix[i + 1][j] = wave_l + 1 if self._matrix[i + 1][j] == 0 else self._matrix[i + 1][j]
+                        self._matrix[i][j - 1] = wave_l + 1 if self._matrix[i][j - 1] == 0 else self._matrix[i][j - 1]
+                        self._matrix[i][j + 1] = wave_l + 1 if self._matrix[i][j + 1] == 0 else self._matrix[i][j + 1]
+                        flag = True
+            wave_l += 1
+        pos = self._end_point
+        wave_l = self._matrix[pos[0]][pos[1]]
+        while wave_l > 11:
+            if self._matrix[pos[0] - 1][pos[1]] == wave_l - 1:
+                self._matrix[pos[0]][pos[1]] = 2
+                pos = (pos[0] - 1, pos[1])
+            elif self._matrix[pos[0] + 1][pos[1]] == wave_l - 1:
+                self._matrix[pos[0]][pos[1]] = 2
+                pos = (pos[0] + 1, pos[1])
+            elif self._matrix[pos[0]][pos[1] - 1] == wave_l - 1:
+                self._matrix[pos[0]][pos[1]] = 2
+                pos = (pos[0], pos[1] - 1)
+            elif self._matrix[pos[0]][pos[1] + 1] == wave_l - 1:
+                self._matrix[pos[0]][pos[1]] = 2
+                pos = (pos[0], pos[1] + 1)
+            wave_l -= 1
+        for i in range(self._act_height):
+            for j in range(self._act_width):
+                if self._matrix[i][j] > 2:
+                    self._matrix[i][j] = 0
 
     def hide_path(self):
-        print('hide path')
-        ...
+        for i in range(self._act_height):
+            for j in range(self._act_width):
+                if self._matrix[i][j] > 1:
+                    self._matrix[i][j] = 0
 
     def load(self, save):
         s_cont = save.split('\n')
@@ -90,10 +125,12 @@ class Maze:
         string_matrix = ''
         for i in range(self._act_width):
             for j in range(self._act_height):
-                sym = ' ' if self._matrix[i][j] == 0 else '*'
-                sym = 'B' if self._end_point[0] * 2 - 1 == i and self._end_point[1] * 2 - 1 == j else sym
-                sym = 'A' if self._player_1.get_pos()[0] * 2 - 1 == i and self._player_1.get_pos()[1] * 2 - 1 == j \
-                    else sym
+                sym = '*' if self._matrix[i][j] == 1 else '-' if self._matrix[i][j] == 2 else ' '
+                sym = 'F' if self._end_point[0] == i and self._end_point[1] == j else sym
+                sym = 'A' if self._player_1.get_pos()[0] == i and self._player_1.get_pos()[1] == j else sym
+                sym = 'B' if self._player_2.get_pos()[0] == i and self._player_2.get_pos()[1] == j and not \
+                    self.is_single() else sym
+                sym = str(self._matrix[i][j]) if self._matrix[i][j] > 10 else sym
                 string_matrix += sym
             string_matrix += '\n'
         string_matrix = string_matrix[:-1]

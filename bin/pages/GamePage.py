@@ -25,6 +25,7 @@ class GamePage(Page):
             self._timer = timer
             self._showed = False
         if key == '1' or (key == '2' and not maze.is_single()):
+            maze.hide_path()
             maze.show_path(key)
             self._showed = False
         if key in self._move_keys:
