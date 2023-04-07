@@ -35,7 +35,7 @@ class LoadMenu(SavesMenu):
         if save_num < 0:
             return
         save_num = int(key) - 1
-        maze.load(self._saves[save_num])
+        maze.set_data(self._saves[save_num])
 
     def get_next_state(self, key):
         res = super().get_next_state(key)

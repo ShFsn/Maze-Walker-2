@@ -88,7 +88,7 @@ class Maze:
                 if self._matrix[i][j] > 1:
                     self._matrix[i][j] = 0
 
-    def load(self, save):
+    def set_data(self, save):
         s_cont = save.split('\n')
         self._height = int(s_cont[0])
         self._act_height = self._height * 2 + 1
@@ -123,7 +123,9 @@ class Maze:
 
     def get_picture(self):
         string_matrix = ''
-        for i in range(self._act_width):
+
+        # Debug renderer
+        '''for i in range(self._act_width):
             for j in range(self._act_height):
                 sym = '*' if self._matrix[i][j] == 1 else '-' if self._matrix[i][j] == 2 else ' '
                 sym = 'F' if self._end_point[0] == i and self._end_point[1] == j else sym
@@ -133,5 +135,38 @@ class Maze:
                 sym = str(self._matrix[i][j]) if self._matrix[i][j] > 10 else sym
                 string_matrix += sym
             string_matrix += '\n'
-        string_matrix = string_matrix[:-1]
+        string_matrix = string_matrix[:-1]'''
+
+        # Normal renderer
+        lines_matrix = list()
+        lines_matrix.append(' _ _ _' * (self._act_width - 2) + '\n')
+        for i in range(1, self._act_height - 1):
+            for j in range(3):
+                lines_matrix.append('|')
+            for j in range(1, self._act_width - 1):
+                if self._player_2.get_pos() == (i, j):
+                    with open('data/Tile_entity', 'r') as f:
+                        tile = f.read().split('\n')
+                        tile[1] = tile[1].split('#')[0] + self._player_2.get_letter() + tile[1].split('#')[1]
+                elif self._player_1.get_pos() == (i, j):
+                    with open('data/Tile_entity', 'r') as f:
+                        tile = f.read().split('\n')
+                        tile[1] = tile[1].split('#')[0] + self._player_1.get_letter() + tile[1].split('#')[1]
+                elif self._end_point == (i, j):
+                    with open('data/Tile_entity', 'r') as f:
+                        tile = f.read().split('\n')
+                        tile[1] = tile[1].split('#')[0] + 'F' + tile[1].split('#')[1]
+                elif self._matrix[i][j] == 0:
+                    with open('data/Tile_empty', 'r') as f:
+                        tile = f.read().split('\n')
+                elif self._matrix[i][j] == 1 or self._matrix[i][j] == 2:
+                    with open('data/Tile_wall', 'r') as f:
+                        tile = f.read().split('\n')
+                for k in range(3):
+                    lines_matrix[k - 3] += tile[k]
+            for j in range(3):
+                lines_matrix[j - 3] += '\n'
+        for i in lines_matrix:
+            string_matrix += i
+
         return string_matrix

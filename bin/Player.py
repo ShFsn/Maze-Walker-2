@@ -13,6 +13,9 @@ class Player:
     def set_letter(self, letter):
         self._letter = letter
 
+    def get_letter(self):
+        return self._letter
+
     def set_pos(self, x, y):
         self._position = (x, y)
 
