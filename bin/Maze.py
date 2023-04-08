@@ -77,6 +77,7 @@ class Maze:
                 self._matrix[pos[0]][pos[1]] = 2
                 pos = (pos[0], pos[1] + 1)
             wave_l -= 1
+        self._matrix[pos[0]][pos[1]] = 2
         for i in range(self._act_height):
             for j in range(self._act_width):
                 if self._matrix[i][j] > 2:
@@ -156,12 +157,26 @@ class Maze:
                     with open('data/Tile_entity', 'r') as f:
                         tile = f.read().split('\n')
                         tile[1] = tile[1].split('#')[0] + 'F' + tile[1].split('#')[1]
+                elif self._matrix[i][j] == 1:
+                    with open('data/Tile_wall', 'r') as f:
+                        tile = f.read().split('\n')
+                elif self._matrix[i][j] == 2:
+                    tile = list()
+                    with open('data/Tile_path_up') as f:
+                        tile.append(f.read().split('\n')[int(self._matrix[i - 1][j] == 2)])
+                    with open('data/Tile_path_left') as f:
+                        tile.append(f.read().split('\n')[int(self._matrix[i][j - 1] == 2)])
+                    with open('data/Tile_path_right') as f:
+                        tile[1] += f.read().split('\n')[int(self._matrix[i][j + 1] == 2)]
+                    with open('data/Tile_path_down') as f:
+                        tile.append(f.read().split('\n')[int(self._matrix[i + 1][j] == 2)])
                 elif self._matrix[i][j] == 0:
                     with open('data/Tile_empty', 'r') as f:
                         tile = f.read().split('\n')
-                elif self._matrix[i][j] == 1 or self._matrix[i][j] == 2:
-                    with open('data/Tile_wall', 'r') as f:
-                        tile = f.read().split('\n')
+                # path workaround
+                tile[2] = tile[2][:2] + '|' + tile[2][-3:] if self._matrix[i + 1][j] == 2 and self._matrix[i][j] == 2 \
+                    else tile[2]
+                tile[1] = tile[1][:-1] + '-' if self._matrix[i][j + 1] == 2 and self._matrix[i][j] == 2 else tile[1]
                 for k in range(3):
                     lines_matrix[k - 3] += tile[k]
             for j in range(3):
