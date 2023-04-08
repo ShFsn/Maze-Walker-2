@@ -1,4 +1,4 @@
-from bin.Drawer import Screen
+from bin.Screen import Screen
 from bin.Maze import Maze
 from bin.pages.TitleScreen import TitleScreen
 from bin.pages.ModeMenu import ModeMenu
