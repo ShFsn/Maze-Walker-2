@@ -19,6 +19,7 @@ class KBEventListener:
             self._event = key.char
         # self._pressed = True
 
+    # noinspection PyMethodMayBeStatic
     def _on_release(self, key):
         # print('{0} release'.format(key))
         if key == Key.esc:
