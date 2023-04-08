@@ -194,4 +194,4 @@ class Maze:
         for i in lines_matrix:
             string_matrix += i
 
-        return string_matrix
+        return string_matrix[:-1]
