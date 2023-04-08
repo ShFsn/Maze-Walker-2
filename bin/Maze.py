@@ -45,6 +45,16 @@ class Maze:
     def set_timer(self, timer):
         self._timer = timer
 
+    def move(self, n_player, side):
+        player = self._player_1 if n_player == 1 else self._player_2
+        pos = player.get_pos()
+        new_pos = (pos[0] - 1, pos[1]) if side == 'up' \
+            else (pos[0], pos[1] - 1) if side == 'left' \
+            else (pos[0] + 1, pos[1]) if side == 'down' \
+            else (pos[0], pos[1] + 1)
+        if self._matrix[new_pos[0]][new_pos[1]] == 0:
+            player.set_pos(new_pos[0], new_pos[1])
+
     def show_path(self, key):
         wave_l = 11
         flag = True

@@ -37,7 +37,13 @@ class GamePage(Page):
         if key == Key.backspace:
             maze.hide_path()
             maze.set_timer(self._timer)
-        ...
+        if key in self._move_keys:
+            sides = ['up', 'left', 'down', 'right']
+            i = 0
+            while key != self._move_keys[i]:
+                i += 1
+            maze.move(i // 4 + 1, sides[i % 4])
+            self._showed = False
 
     def get_contents(self, maze):
         if self._showed:
