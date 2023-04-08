@@ -1,3 +1,4 @@
+from random import randint
 from bin.Player import Player
 
 
@@ -7,6 +8,8 @@ class Maze:
         self._width = 0
         self._act_height = 0
         self._act_width = 0
+        self._generator_type = ''
+        self._points_pos_type = 0
         self._matrix = list()
         self._end_point = (0, 0)
         self._timer = 0
@@ -53,6 +56,19 @@ class Maze:
         return self._player_1.get_pos() == self._end_point or \
                (self._player_2.get_pos() == self._end_point and not self.is_single())
 
+    def set_generator(self, g_t):
+        self._generator_type = g_t
+
+    def set_size(self, height, width):
+        self._height = int(height)
+        self._act_height = self._height * 2 + 1
+        self._width = int(width)
+        self._act_width = self._width * 2 + 1
+
+    def set_points_pos_type(self, pos_type):
+        self._points_pos_type = pos_type
+        print(self._points_pos_type)
+
     def get_timer(self):
         return self._timer
 
@@ -69,10 +85,10 @@ class Maze:
         if self._matrix[new_pos[0]][new_pos[1]] == 0:
             player.set_pos(new_pos[0], new_pos[1])
 
-    def show_path(self, key):
+    def _calc_path(self, pos_1, pos_2):
         wave_l = 11
         flag = True
-        pos = self._player_1.get_pos() if key == '1' else self._player_2.get_pos()
+        pos = pos_1
         self._matrix[pos[0]][pos[1]] = wave_l
         while flag:
             flag = False
@@ -85,27 +101,26 @@ class Maze:
                         self._matrix[i][j + 1] = wave_l + 1 if self._matrix[i][j + 1] == 0 else self._matrix[i][j + 1]
                         flag = True
             wave_l += 1
-        pos = self._end_point
+        pos = pos_2
         wave_l = self._matrix[pos[0]][pos[1]]
-        while wave_l > 11:
+        while wave_l >= 11:
+            self._matrix[pos[0]][pos[1]] = 2
             if self._matrix[pos[0] - 1][pos[1]] == wave_l - 1:
-                self._matrix[pos[0]][pos[1]] = 2
                 pos = (pos[0] - 1, pos[1])
             elif self._matrix[pos[0] + 1][pos[1]] == wave_l - 1:
-                self._matrix[pos[0]][pos[1]] = 2
                 pos = (pos[0] + 1, pos[1])
             elif self._matrix[pos[0]][pos[1] - 1] == wave_l - 1:
-                self._matrix[pos[0]][pos[1]] = 2
                 pos = (pos[0], pos[1] - 1)
             elif self._matrix[pos[0]][pos[1] + 1] == wave_l - 1:
-                self._matrix[pos[0]][pos[1]] = 2
                 pos = (pos[0], pos[1] + 1)
             wave_l -= 1
-        self._matrix[pos[0]][pos[1]] = 2
         for i in range(self._act_height):
             for j in range(self._act_width):
                 if self._matrix[i][j] > 2:
                     self._matrix[i][j] = 0
+
+    def show_path(self, key):
+        self._calc_path(self._player_1.get_pos() if key == '1' else self._player_2.get_pos(), self._end_point)
 
     def hide_path(self):
         for i in range(self._act_height):
@@ -201,3 +216,75 @@ class Maze:
             string_matrix += i
 
         return string_matrix[:-1]
+
+    def generate(self):
+        self._timer = 0
+
+        # Generating players and finish positions
+        if self._points_pos_type == 1:
+            self._player_1.set_pos(1, 1)
+            self._player_2.set_pos(self._act_height - 2, 1)
+            self._end_point = (1 + (self._act_height - 3) * randint(0, 1), self._act_width - 2)
+        elif self._points_pos_type == 2:
+            self._player_1.set_pos((randint(1, self._height) - 1) * 2 + 1, (randint(1, self._width) - 1) * 2 + 1)
+            self._player_2.set_pos((randint(1, self._height) - 1) * 2 + 1, (randint(1, self._width) - 1) * 2 + 1)
+            self._end_point = ((randint(1, self._height) - 1) * 2 + 1, (randint(1, self._width) - 1) * 2 + 1)
+            while self._player_1.get_pos()[0] == self._player_2.get_pos()[0] \
+                    and self._player_1.get_pos()[1] == self._player_2.get_pos()[1]:
+                self._player_2.set_pos((randint(1, self._height) - 1) * 2 + 1, (randint(1, self._width) - 1) * 2 + 1)
+            while (self._end_point[0] == self._player_1.get_pos()[0] and
+                   self._end_point[1] == self._player_1.get_pos()[1]) or \
+                    (self._end_point[0] == self._player_2.get_pos()[0] and
+                     self._end_point[1] == self._player_2.get_pos()[1]):
+                self._end_point = ((randint(1, self._height) - 1) * 2 + 1, (randint(1, self._width) - 1) * 2 + 1)
+        elif self._points_pos_type == 3:
+            perimeter = self._height * 2 + self._width * 2 - 4
+            pos_1 = randint(1, perimeter)
+            pos_2 = randint(1, perimeter)
+            pos_f = randint(1, perimeter)
+            while pos_1 == pos_2:
+                pos_2 = randint(1, perimeter)
+            while pos_f == pos_1 or pos_f == pos_2:
+                pos_f = randint(1, perimeter)
+            pos_h = 1
+            pos_w = 3
+            for i in range(1, perimeter + 1):
+                if pos_1 == i:
+                    self._player_1.set_pos(pos_h, pos_w)
+                if pos_2 == i:
+                    self._player_2.set_pos(pos_h, pos_w)
+                if pos_f == i:
+                    self._end_point = (pos_h, pos_w)
+                if pos_w == 1:
+                    pos_h -= 2
+                elif pos_h == self._act_height - 2:
+                    pos_w -= 2
+                elif pos_w == self._act_width - 2:
+                    pos_h += 2
+                elif pos_h == 1:
+                    pos_w += 2
+
+        # Filling matrix with walls
+        self._matrix = list()
+        for i in range(self._act_height):
+            self._matrix.append(list())
+            for j in range(self._act_width):
+                '''self._matrix[i].append(1 if i == 0 or i == self._act_height - 1 or j == 0 or j == self._act_width - 1
+                                            or (i % 2 == 0 and j % 2 == 0) else -1)'''
+                self._matrix[i].append(1)
+
+        # Creating a set of graph edges with different randomly set values
+        edges = list()
+        for i in range(self._height * 2 - 1):
+            edges.append(list())
+            for j in range(self._width - 1 + i % 2):
+                edges[i].append(0)
+        for k in range(1, (self._width - 1) * self._height + self._width * (self._height - 1) + 1):
+            pos = randint(1, (self._width - 1) * self._height + self._width * (self._height - 1) + 1 - k)
+            pos_curr = 0
+            flag = True
+            for i in range(self._height * 2 - 1):
+                for j in range(self._width - 1 + i % 2):
+                    pos_curr += 1 if edges[i][j] == 0 else 0
+                    edges[i][j] = k if pos == pos_curr and flag else edges[i][j]
+                    flag = False if pos == pos_curr else True
