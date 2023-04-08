@@ -124,9 +124,9 @@ class Maze:
         self._end_point = (int(s_cont[6]), int(s_cont[7]))
         self._timer = int(s_cont[8])
         self._matrix = list()
-        for i in range(self._act_width):
+        for i in range(self._act_height):
             self._matrix.append(list())
-            for j in range(self._act_height):
+            for j in range(self._act_width):
                 self._matrix[i].append(int(s_cont[i + 9][j]))
 
     def get_data(self):
