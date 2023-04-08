@@ -16,6 +16,20 @@ class Maze:
         self._player_2.set_letter('2')
         self._single = True
         self._online = False
+        with open('data/Tile_entity', 'r') as f:
+            self._tile_entity = f.read().split('\n')
+        with open('data/Tile_empty', 'r') as f:
+            self._tile_empty = f.read().split('\n')
+        with open('data/Tile_wall', 'r') as f:
+            self._tile_wall = f.read().split('\n')
+        with open('data/Tile_path_up', 'r') as f:
+            self._tile_path_up = f.read().split('\n')
+        with open('data/Tile_path_left', 'r') as f:
+            self._tile_path_left = f.read().split('\n')
+        with open('data/Tile_path_down', 'r') as f:
+            self._tile_path_down = f.read().split('\n')
+        with open('data/Tile_path_right', 'r') as f:
+            self._tile_path_right = f.read().split('\n')
 
     def set_single(self):
         self._player_1.activate()
@@ -156,33 +170,25 @@ class Maze:
                 lines_matrix.append('|')
             for j in range(1, self._act_width - 1):
                 if self._player_2.get_pos() == (i, j):
-                    with open('data/Tile_entity', 'r') as f:
-                        tile = f.read().split('\n')
-                        tile[1] = tile[1].split('#')[0] + self._player_2.get_letter() + tile[1].split('#')[1]
+                    tile = self._tile_entity.copy()
+                    tile[1] = tile[1].split('#')[0] + self._player_2.get_letter() + tile[1].split('#')[1]
                 elif self._player_1.get_pos() == (i, j):
-                    with open('data/Tile_entity', 'r') as f:
-                        tile = f.read().split('\n')
-                        tile[1] = tile[1].split('#')[0] + self._player_1.get_letter() + tile[1].split('#')[1]
+                    tile = self._tile_entity.copy()
+                    tile[1] = tile[1].split('#')[0] + self._player_1.get_letter() + tile[1].split('#')[1]
                 elif self._end_point == (i, j):
-                    with open('data/Tile_entity', 'r') as f:
-                        tile = f.read().split('\n')
-                        tile[1] = tile[1].split('#')[0] + 'F' + tile[1].split('#')[1]
+                    tile = self._tile_entity.copy()
+                    tile[1] = tile[1].split('#')[0] + 'F' + tile[1].split('#')[1]
                 elif self._matrix[i][j] == 1:
-                    with open('data/Tile_wall', 'r') as f:
-                        tile = f.read().split('\n')
+                    tile = self._tile_wall
                 elif self._matrix[i][j] == 2:
                     tile = list()
-                    with open('data/Tile_path_up') as f:
-                        tile.append(f.read().split('\n')[int(self._matrix[i - 1][j] == 2)])
-                    with open('data/Tile_path_left') as f:
-                        tile.append(f.read().split('\n')[int(self._matrix[i][j - 1] == 2)])
-                    with open('data/Tile_path_right') as f:
-                        tile[1] += f.read().split('\n')[int(self._matrix[i][j + 1] == 2)]
-                    with open('data/Tile_path_down') as f:
-                        tile.append(f.read().split('\n')[int(self._matrix[i + 1][j] == 2)])
-                elif self._matrix[i][j] == 0:
-                    with open('data/Tile_empty', 'r') as f:
-                        tile = f.read().split('\n')
+                    tile.append(self._tile_path_up[int(self._matrix[i - 1][j] == 2)])
+                    tile.append(self._tile_path_left[int(self._matrix[i][j - 1] == 2)])
+                    tile[1] += self._tile_path_right[int(self._matrix[i][j + 1] == 2)]
+                    tile.append(self._tile_path_down[int(self._matrix[i + 1][j] == 2)])
+                # elif self._matrix[i][j] == 0:
+                else:
+                    tile = self._tile_empty
                 # path workaround
                 tile[2] = tile[2][:2] + '|' + tile[2][-3:] if self._matrix[i + 1][j] == 2 and self._matrix[i][j] == 2 \
                     else tile[2]
