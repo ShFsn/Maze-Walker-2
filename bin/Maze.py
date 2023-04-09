@@ -76,7 +76,7 @@ class Maze:
         self._timer = timer
 
     def move(self, n_player, side):
-        player = self._player_1 if n_player == 1 else self._player_2
+        player = self._player_2 if n_player == 2 and not self.is_single() else self._player_1
         pos = player.get_pos()
         new_pos = (pos[0] - 1, pos[1]) if side == 'up' \
             else (pos[0], pos[1] - 1) if side == 'left' \
@@ -184,7 +184,7 @@ class Maze:
             for j in range(3):
                 lines_matrix.append('|')
             for j in range(1, self._act_width - 1):
-                if self._player_2.get_pos() == (i, j):
+                if self._player_2.get_pos() == (i, j) and not self.is_single():
                     tile = self._tile_entity.copy()
                     tile[1] = tile[1].split('#')[0] + self._player_2.get_letter() + tile[1].split('#')[1]
                 elif self._player_1.get_pos() == (i, j):

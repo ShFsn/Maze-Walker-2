@@ -29,11 +29,8 @@ class GamePage(Page):
             maze.show_path(key)
             self._showed = False
         if key in self._move_keys:
-            if maze.is_single() and key in self._move_keys[4:]:
-                pass
-            else:
-                maze.hide_path()
-                self._showed = False
+            maze.hide_path()
+            self._showed = False
         if key == Key.backspace:
             maze.hide_path()
             maze.set_timer(self._timer)
