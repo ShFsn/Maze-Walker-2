@@ -245,6 +245,14 @@ class Maze:
             res.append(((edge[1] + 1) // 2 + 1, edge[2] + 1))
         return res
 
+    def _break_wall(self, vertx):
+        # noinspection PyTypeChecker
+        self._matrix[(vertx[0][0] - 1) * 2 + 1][(vertx[0][1] - 1) * 2 + 1] = 0
+        # noinspection PyTypeChecker
+        self._matrix[(vertx[1][0] - 1) * 2 + 1][(vertx[1][1] - 1) * 2 + 1] = 0
+        # noinspection PyTypeChecker
+        self._matrix[vertx[0][0] + vertx[1][0] - 1][vertx[0][1] + vertx[1][1] - 1] = 0
+
     def generate(self):
         self._timer = 0
         self._matrix = list()
@@ -337,15 +345,27 @@ class Maze:
                     vert = (vertx[1][0], vertx[1][1])
                     flag = True
                 if flag:
-                    # noinspection PyTypeChecker
-                    self._matrix[(vertx[0][0] - 1) * 2 + 1][(vertx[0][1] - 1) * 2 + 1] = 0
-                    # noinspection PyTypeChecker
-                    self._matrix[(vertx[1][0] - 1) * 2 + 1][(vertx[1][1] - 1) * 2 + 1] = 0
-                    # noinspection PyTypeChecker
-                    self._matrix[vertx[0][0] + vertx[1][0] - 1][vertx[0][1] + vertx[1][1] - 1] = 0
+                    self._break_wall(vertx)
                 q_len = len(queue)
 
-        '''for i in edges:
-            print(i)
-        print(vert, [heappop(queue) for i in range(len(queue))])
-        print(edge, vertx)'''
+        # Minimum Spanning Tree
+        if self._generator_type == 'MST':
+            for i in range(len(edges)):
+                for j in range(len(edges[i])):
+                    heappush(queue, (edges[i][j], i, j))
+            while len(queue):
+                vertx = self._get_corresponding_vertx(heappop(queue))
+                if self._matrix[(vertx[0][0] - 1) * 2 + 1][(vertx[0][1] - 1) * 2 + 1] == 0 \
+                        and self._matrix[(vertx[1][0] - 1) * 2 + 1][(vertx[1][1] - 1) * 2 + 1] == 0:
+                    self._calc_path(((vertx[0][0] - 1) * 2 + 1, (vertx[0][1] - 1) * 2 + 1),
+                                    ((vertx[1][0] - 1) * 2 + 1, (vertx[1][1] - 1) * 2 + 1))
+                    if self._matrix[(vertx[0][0] - 1) * 2 + 1][(vertx[0][1] - 1) * 2 + 1] == 2 \
+                            and self._matrix[(vertx[1][0] - 1) * 2 + 1][(vertx[1][1] - 1) * 2 + 1] == 2:
+                        flag = False
+                    else:
+                        flag = True
+                    self.hide_path()
+                else:
+                    flag = True
+                if flag:
+                    self._break_wall(vertx)
