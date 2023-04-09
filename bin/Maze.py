@@ -1,4 +1,5 @@
 from random import randint
+from heapq import heappush, heappop
 from bin.Player import Player
 
 
@@ -217,8 +218,38 @@ class Maze:
 
         return string_matrix[:-1]
 
+    def _get_corresponding_edges(self, vert, edges):
+        res = list()
+        if vert[0] < self._height and edges[vert[0] * 2 - 1][vert[1] - 1] > 0:
+            res.append((edges[vert[0] * 2 - 1][vert[1] - 1], vert[0] * 2 - 1, vert[1] - 1))
+            edges[vert[0] * 2 - 1][vert[1] - 1] = -1
+        if vert[0] > 1 and edges[vert[0] * 2 - 3][vert[1] - 1] > 0:
+            res.append((edges[vert[0] * 2 - 3][vert[1] - 1], vert[0] * 2 - 3, vert[1] - 1))
+            edges[vert[0] * 2 - 3][vert[1] - 1] = -1
+        if vert[1] < self._width and edges[vert[0] * 2 - 2][vert[1] - 1] > 0:
+            res.append((edges[vert[0] * 2 - 2][vert[1] - 1], vert[0] * 2 - 2, vert[1] - 1))
+            edges[vert[0] * 2 - 2][vert[1] - 1] = -1
+        if vert[1] > 1 and edges[vert[0] * 2 - 2][vert[1] - 2] > 0:
+            res.append((edges[vert[0] * 2 - 2][vert[1] - 2], vert[0] * 2 - 2, vert[1] - 2))
+            edges[vert[0] * 2 - 2][vert[1] - 2] = -1
+        return res
+
+    @staticmethod
+    def _get_corresponding_vertx(edge):
+        res = list()
+        if edge[1] % 2 == 0:
+            res.append((edge[1] // 2 + 1, edge[2] + 1))
+            res.append((edge[1] // 2 + 1, edge[2] + 2))
+        else:
+            res.append(((edge[1] + 1) // 2, edge[2] + 1))
+            res.append(((edge[1] + 1) // 2 + 1, edge[2] + 1))
+        return res
+
     def generate(self):
         self._timer = 0
+        self._matrix = list()
+        edges = list()
+        queue = list()
 
         # Generating players and finish positions
         if self._points_pos_type == 1:
@@ -265,7 +296,6 @@ class Maze:
                     pos_w += 2
 
         # Filling matrix with walls
-        self._matrix = list()
         for i in range(self._act_height):
             self._matrix.append(list())
             for j in range(self._act_width):
@@ -274,7 +304,6 @@ class Maze:
                 self._matrix[i].append(1)
 
         # Creating a set of graph edges with different randomly set values
-        edges = list()
         for i in range(self._height * 2 - 1):
             edges.append(list())
             for j in range(self._width - 1 + i % 2):
@@ -288,3 +317,35 @@ class Maze:
                     pos_curr += 1 if edges[i][j] == 0 else 0
                     edges[i][j] = k if pos == pos_curr and flag else edges[i][j]
                     flag = False if pos == pos_curr else True
+
+        # DFS
+        if self._generator_type == 'DFS':
+            q_len = 10
+            vert = (randint(1, self._height), randint(1, self._width))
+            self._matrix[(vert[0] - 1) * 2 + 1][(vert[1] - 1) * 2 + 1] = 0
+
+            while q_len:
+                ext = self._get_corresponding_edges(vert, edges)
+                for i in ext:
+                    heappush(queue, i)
+                vertx = self._get_corresponding_vertx(heappop(queue))
+                flag = False
+                if self._matrix[(vertx[0][0] - 1) * 2 + 1][(vertx[0][1] - 1) * 2 + 1] == 1:
+                    vert = (vertx[0][0], vertx[0][1])
+                    flag = True
+                if self._matrix[(vertx[1][0] - 1) * 2 + 1][(vertx[1][1] - 1) * 2 + 1] == 1:
+                    vert = (vertx[1][0], vertx[1][1])
+                    flag = True
+                if flag:
+                    # noinspection PyTypeChecker
+                    self._matrix[(vertx[0][0] - 1) * 2 + 1][(vertx[0][1] - 1) * 2 + 1] = 0
+                    # noinspection PyTypeChecker
+                    self._matrix[(vertx[1][0] - 1) * 2 + 1][(vertx[1][1] - 1) * 2 + 1] = 0
+                    # noinspection PyTypeChecker
+                    self._matrix[vertx[0][0] + vertx[1][0] - 1][vertx[0][1] + vertx[1][1] - 1] = 0
+                q_len = len(queue)
+
+        '''for i in edges:
+            print(i)
+        print(vert, [heappop(queue) for i in range(len(queue))])
+        print(edge, vertx)'''
