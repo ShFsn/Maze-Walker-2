@@ -9,9 +9,12 @@ class Server(BaseHTTPRequestHandler):
                 f.write('1\n'   # init
                         '0')    # guest_on
 
+        elif self.path == '/stop':
+            self.server.server_close()
+
         elif self.path == '/guest_ping':
             data = list()
-            while not len(data):
+            while not len(data) > 1:
                 with open('data/server_data', 'r') as f:
                     data = f.read().split('\n')
             data[1] = '1'
@@ -19,5 +22,12 @@ class Server(BaseHTTPRequestHandler):
                 f.write('\n'.join(data))
             self.wfile.write(bytes('established', "utf-8"))
 
-        elif self.path == '/stop':
-            self.server.server_close()
+        elif self.path == '/get_maze':
+            data = list()
+            while not len(data) > 1:
+                with open('data/server_data', 'r') as f:
+                    data = f.read().split('#')
+                if len(data) < 2:
+                    self.wfile.write(bytes('', "utf-8"))
+                else:
+                    self.wfile.write(bytes(data[1], "utf-8"))

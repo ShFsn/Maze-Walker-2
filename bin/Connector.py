@@ -5,6 +5,7 @@ from threading import Thread
 import socket
 
 
+# noinspection PyBroadException
 class Connector:
     def __init__(self):
         self.web_server = None
@@ -53,7 +54,7 @@ class Connector:
     @staticmethod
     def check_init():
         data = list()
-        while not len(data):
+        while not len(data) > 1:
             with open('data/server_data', 'r') as f:
                 data = f.read().split('\n')
         return True if int(data[0]) else False
@@ -61,7 +62,7 @@ class Connector:
     @staticmethod
     def check_guest():
         data = list()
-        while not len(data):
+        while not len(data) > 1:
             with open('data/server_data', 'r') as f:
                 data = f.read().split('\n')
         return True if int(data[1]) else False
@@ -75,3 +76,20 @@ class Connector:
             return False if response == 'established' else True
         except:
             return True
+
+    @staticmethod
+    def set_mp_maze(maze_data):
+        data = list()
+        while not len(data) > 1:
+            with open('data/server_data', 'r') as f:
+                data = f.read()
+            with open('data/server_data', 'w') as f:
+                f.write(data + '\n#' + maze_data + '\n#' + maze_data.split('\n')[2] + '\n' + maze_data.split('\n')[3] +
+                        '\n#' + maze_data.split('\n')[4] + '\n' + maze_data.split('\n')[5])
+
+    def get_mp_maze(self):
+        try:
+            response = self._send_request('/get_maze')
+            return response
+        except:
+            return 'closed'

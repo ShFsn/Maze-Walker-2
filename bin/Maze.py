@@ -80,6 +80,12 @@ class Maze:
     def connect_guest(self, address):
         return self._connector.connect_guest(address)
 
+    def set_mp_maze(self, data):
+        self._connector.set_mp_maze(data)
+
+    def get_mp_maze(self):
+        return self._connector.get_mp_maze()
+
     def is_finished(self):
         return self._player_1.get_pos() == self._end_point or \
                (self._player_2.get_pos() == self._end_point and not self.is_single())

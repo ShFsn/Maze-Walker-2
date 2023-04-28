@@ -45,12 +45,15 @@ class HostSelect(Page):
             self._field_4 = '' if self._field_4 == '' else str(int(self._field_4))
             self._field_port += (key if self._field_active == 5 else '')
             self._field_port = '' if self._field_port == '' else str(int(self._field_port))
+            self._conn_not_established = False
             self._showed = False
         elif self._field_active < 5 and (key == Key.right or key == Key.space or key == Key.enter):
             self._field_active += 1
+            self._conn_not_established = False
             self._showed = False
         elif self._field_active > 1 and key == Key.left:
             self._field_active -= 1
+            self._conn_not_established = False
             self._showed = False
         elif key == Key.backspace:
             if self._field_active == 1 and self._field_1 != '':
@@ -73,6 +76,7 @@ class HostSelect(Page):
                 self._field_port = self._field_port[:-1]
                 self._prev_allowed = False
                 self._showed = False
+            self._conn_not_established = False
         elif key == Key.enter and self._field_active == 5 and \
                 self._field_1 != '' and \
                 self._field_2 != '' and \
@@ -114,6 +118,5 @@ class HostSelect(Page):
                 self._field_4 != '' and \
                 self._field_port != '' and \
                 not self._conn_not_established:
-            print('testmaze')
             return 'GuestWait'
         return ''
