@@ -78,7 +78,6 @@ class Maze:
         return self._connector.check_guest()
 
     def connect_guest(self, address):
-        print('testmaze')
         return self._connector.connect_guest(address)
 
     def is_finished(self):

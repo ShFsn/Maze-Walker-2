@@ -114,5 +114,6 @@ class HostSelect(Page):
                 self._field_4 != '' and \
                 self._field_port != '' and \
                 not self._conn_not_established:
+            print('testmaze')
             return 'GuestWait'
         return ''
