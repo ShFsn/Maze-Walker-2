@@ -16,7 +16,7 @@ class GamePage(Page):
 
     def action(self, key, maze):
         super().action(key, maze)
-        if time.time() - self._time > 0.01 and not maze.is_single() and not maze.is_host():
+        if time.time() - self._time > 0.01 and maze.is_online() and not maze.is_host():
             self._time = time.time()
             if maze.check_disconnect():
                 self._conn_closed = True
@@ -42,7 +42,7 @@ class GamePage(Page):
         if key == Key.backspace:
             maze.hide_path()
             maze.set_timer(self._timer)
-            if not maze.is_single() and maze.is_host():
+            if  maze.is_online() and maze.is_host():
                 maze.server_disconnect()
                 maze.server_stop()
         if key in self._move_keys:

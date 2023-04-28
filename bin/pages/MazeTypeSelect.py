@@ -13,7 +13,7 @@ class MazeTypeMenu(Page):
 
     def action(self, key, maze):
         super().action(key, maze)
-        if key == Key.backspace and not maze.is_single() and maze.is_host():
+        if key == Key.backspace and maze.is_online() and maze.is_host():
             maze.server_disconnect()
             maze.server_stop()
         elif key == '1':

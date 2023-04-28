@@ -63,6 +63,9 @@ class Maze:
     def is_single(self):
         return self._single
 
+    def is_online(self):
+        return self._online
+
     def is_host(self):
         return self._host
 
