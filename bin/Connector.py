@@ -54,7 +54,7 @@ class Connector:
     @staticmethod
     def check_init():
         data = list()
-        while not len(data) > 1:
+        while len(data) < 2:
             with open('data/server_data', 'r') as f:
                 data = f.read().split('\n')
         return True if int(data[0]) else False
@@ -62,7 +62,7 @@ class Connector:
     @staticmethod
     def check_guest():
         data = list()
-        while not len(data) > 1:
+        while len(data) < 2:
             with open('data/server_data', 'r') as f:
                 data = f.read().split('\n')
         return True if int(data[1]) else False
@@ -80,7 +80,7 @@ class Connector:
     @staticmethod
     def set_mp_maze(maze_data):
         data = list()
-        while not len(data) > 1:
+        while len(data) < 2:
             with open('data/server_data', 'r') as f:
                 data = f.read()
             with open('data/server_data', 'w') as f:
