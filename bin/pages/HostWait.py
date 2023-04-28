@@ -17,7 +17,7 @@ class HostWait(Page):
 
     def action(self, key, maze):
         super().action(key, maze)
-        if time.time() - self._time > 0.05:
+        if time.time() - self._time > 0.01:
             self._time = time.time()
             if not self._server_started:
                 with open('data/server_data', 'w') as f:
