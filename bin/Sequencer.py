@@ -11,6 +11,7 @@ from bin.pages.GamePage import GamePage
 from bin.pages.HostModeMenu import HostModeMenu
 from bin.pages.HostWait import HostWait
 from bin.pages.HostSelect import HostSelect
+from bin.pages.GuestWait import GuestWait
 
 
 class Sequencer:
@@ -30,6 +31,7 @@ class Sequencer:
         self._host_mode_menu = HostModeMenu()
         self._host_wait = HostWait()
         self._host_select = HostSelect()
+        self._guest_wait = GuestWait()
 
     def call(self, key):
         if self._state == 'TitleScreen':
@@ -54,6 +56,8 @@ class Sequencer:
             self._call_page(self._host_wait, key)
         elif self._state == 'HostSelect':
             self._call_page(self._host_select, key)
+        elif self._state == 'GuestWait':
+            self._call_page(self._guest_wait, key)
 
     def _call_page(self, page, key):
         self._screen.refresh(page.get_contents(self._maze))
