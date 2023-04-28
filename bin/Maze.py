@@ -22,6 +22,7 @@ class Maze:
         self._single = True
         self._online = False
         self._host = False
+        self._server_active = False
         self._connector = Connector()
         with open('data/Tile_entity', 'r') as f:
             self._tile_entity = f.read().split('\n')
@@ -66,6 +67,7 @@ class Maze:
         return self._host
 
     def server_start(self):
+        self._server_active = True
         return self._connector.server_start()
 
     def server_disconnect(self):
@@ -75,7 +77,9 @@ class Maze:
         return self._connector.check_disconnect()
 
     def server_stop(self):
-        self._connector.server_stop()
+        if self._server_active:
+            self._connector.server_stop()
+            self._server_active = False
 
     def check_init(self):
         return self._connector.check_init()

@@ -10,14 +10,14 @@ class Server(BaseHTTPRequestHandler):
                         '0')    # guest_on
 
         elif self.path == '/check_disconnect':
-            data = list()
-            while len(data) < 2:
+            data = ''
+            while len(data) < 1:
                 with open('data/server_data', 'r') as f:
-                    data = f.read().split('\n')
-            if data[0] == 'disconnect':
+                    data = f.read()
+            if data == 'disconnect':
+                self.wfile.write(bytes('confirm', "utf-8"))
                 with open('data/server_data', 'w') as f:
                     f.write('confirm')
-                self.wfile.write(bytes('confirm', "utf-8"))
             else:
                 self.wfile.write(bytes('negative', "utf-8"))
 
