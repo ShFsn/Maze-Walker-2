@@ -23,8 +23,9 @@ class GamePage(Page):
                 if self._moved:
                     maze.set_mp_pos(1, maze.get_pos(1))
                 pos = maze.get_mp_pos(2)
-                if pos != maze.get_pos(2):
+                if pos != maze.get_pos(2) and pos != (-1, -1):
                     maze.set_pos(2, pos)
+                    maze.hide_path()
                     self._showed = False
             elif maze.is_online() and not maze.is_host():
                 if maze.check_disconnect():
@@ -33,8 +34,9 @@ class GamePage(Page):
                 if self._moved:
                     maze.set_mp_pos(2, maze.get_pos(2))
                 pos = maze.get_mp_pos(1)
-                if pos != maze.get_pos(1):
+                if pos != maze.get_pos(1) and pos != (-1, -1):
                     maze.set_pos(1, pos)
+                    maze.hide_path()
                     self._showed = False
         if self._timer_state == 0:
             self._time_start = time.time()

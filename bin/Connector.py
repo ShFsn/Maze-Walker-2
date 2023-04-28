@@ -131,10 +131,10 @@ class Connector:
         if n_player == 1:
             pos = self._send_request('/get_pos/' + str(n_player))
         elif n_player == 2:
-            data = list()
-            while len(data) < 2:
-                with open('data/server_data', 'r') as f:
-                    data = f.read().split('#')
+            with open('data/server_data', 'r') as f:
+                data = f.read().split('#')
+            if len(data) < 2:
+                return -1, -1
             pos = data[1 + n_player]
         return int(pos.split('\n')[0]), int(pos.split('\n')[1])
 

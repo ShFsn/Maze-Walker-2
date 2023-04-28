@@ -55,8 +55,9 @@ class Server(BaseHTTPRequestHandler):
                     f.write('#'.join(data))
 
             elif req[1] == 'get_pos':
-                data = list()
-                while len(data) < 2:
-                    with open('data/server_data', 'r') as f:
-                        data = f.read().split('#')
-                self.wfile.write(bytes(data[1 + int(req[2])], "utf-8"))
+                with open('data/server_data', 'r') as f:
+                    data = f.read().split('#')
+                if len(data) < 2:
+                    self.wfile.write(bytes('-1\n-1', "utf-8"))
+                else:
+                    self.wfile.write(bytes(data[1 + int(req[2])], "utf-8"))
