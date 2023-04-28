@@ -129,12 +129,12 @@ class Connector:
     def get_mp_pos(self, n_player):
         pos = '0\n0'
         if n_player == 1:
+            pos = self._send_request('/get_pos/' + str(n_player))
+        elif n_player == 2:
             data = list()
             while len(data) < 2:
                 with open('data/server_data', 'r') as f:
                     data = f.read().split('#')
             pos = data[1 + n_player]
-        elif n_player == 2:
-            pos = self._send_request('/get_pos/' + str(n_player))
         return int(pos.split('\n')[0]), int(pos.split('\n')[1])
 

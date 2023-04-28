@@ -26,7 +26,7 @@ class GamePage(Page):
                 if pos != maze.get_pos(2):
                     maze.set_pos(2, pos)
                     self._showed = False
-            if maze.is_online() and not maze.is_host():
+            elif maze.is_online() and not maze.is_host():
                 if maze.check_disconnect():
                     self._conn_closed = True
                     return
