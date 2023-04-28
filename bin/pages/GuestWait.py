@@ -15,6 +15,9 @@ class GuestWait(Page):
         super().action(key, maze)
         if time.time() - self._time > 0.05:
             self._time = time.time()
+            if maze.check_disconnect():
+                self._conn_closed = True
+                return
             data = maze.get_mp_maze()
             if data == 'closed':
                 self._conn_closed = True

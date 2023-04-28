@@ -68,6 +68,12 @@ class Maze:
     def server_start(self):
         return self._connector.server_start()
 
+    def server_disconnect(self):
+        self._connector.disconnect()
+
+    def check_disconnect(self):
+        return self._connector.check_disconnect()
+
     def server_stop(self):
         self._connector.server_stop()
 

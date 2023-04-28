@@ -32,9 +32,6 @@ class HostWait(Page):
                 self._guest_on = maze.check_guest()
         if key == Key.backspace:
             maze.server_stop()
-            self._server_started = False
-            self._guest_on = False
-            self._initialized = False
 
     def get_next_state(self, key):
         res = super().get_next_state(key)
@@ -43,3 +40,9 @@ class HostWait(Page):
         elif self._guest_on:
             return 'MazeTypeMenu'
         return ''
+
+    def exit(self):
+        super().exit()
+        self._server_started = False
+        self._guest_on = False
+        self._initialized = False

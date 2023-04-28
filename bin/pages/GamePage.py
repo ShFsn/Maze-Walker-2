@@ -36,6 +36,7 @@ class GamePage(Page):
             maze.hide_path()
             maze.set_timer(self._timer)
             if not maze.is_single() and maze.is_host():
+                maze.server_disconnect()
                 maze.server_stop()
         if key in self._move_keys:
             sides = ['up', 'left', 'down', 'right']
@@ -44,8 +45,6 @@ class GamePage(Page):
                 i += 1
             maze.move(i // 4 + 1, sides[i % 4])
             self._showed = False
-        if key == Key.backspace and not maze.is_single() and maze.is_host():
-            maze.server_stop()
 
     def get_contents(self, maze):
         if self._showed:

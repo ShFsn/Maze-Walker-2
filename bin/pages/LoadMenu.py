@@ -37,6 +37,7 @@ class LoadMenu(SavesMenu):
             return
         save_num = int(key) - 1
         maze.set_data(self._saves[save_num])
+        maze.set_mp_maze(self._saves[save_num])
 
     def get_next_state(self, key):
         res = super().get_next_state(key)

@@ -3,6 +3,7 @@ from http.server import ThreadingHTTPServer
 from threading import Thread
 # from random import randint
 import socket
+import time
 
 
 # noinspection PyBroadException
@@ -47,6 +48,27 @@ class Connector:
         self._conn_port = port
         self._send_request('/init')
         return hostname, port
+
+    @staticmethod
+    def disconnect():
+        start = time.time()
+        data = list()
+        while len(data) < 2:
+            with open('data/server_data', 'r') as f:
+                data = f.read()
+            with open('data/server_data', 'w') as f:
+                f.write('disconnect')
+        with open('data/server_data', 'r') as f:
+            data = f.read()
+        while data != 'confirm' and time.time() - start < 5:
+            with open('data/server_data', 'r') as f:
+                data = f.read()
+
+    def check_disconnect(self):
+        if self._send_request('/check_disconnect') == 'confirm':
+            return True
+        return False
+
 
     def server_stop(self):
         self._send_request('/stop')
