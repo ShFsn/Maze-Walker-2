@@ -52,13 +52,19 @@ class Connector:
 
     @staticmethod
     def check_init():
-        with open('data/server_data', 'r') as f:
-            return True if int(f.read().split('\n')[0]) else False
+        data = list()
+        while not len(data):
+            with open('data/server_data', 'r') as f:
+                data = f.read().split('\n')
+        return True if int(data[0]) else False
 
     @staticmethod
     def check_guest():
-        with open('data/server_data', 'r') as f:
-            return True if int(f.read().split('\n')[1]) else False
+        data = list()
+        while not len(data):
+            with open('data/server_data', 'r') as f:
+                data = f.read().split('\n')
+        return True if int(data[1]) else False
 
     # noinspection PyBroadException
     def connect_guest(self, address):

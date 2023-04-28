@@ -10,8 +10,10 @@ class Server(BaseHTTPRequestHandler):
                         '0')    # guest_on
 
         elif self.path == '/guest_ping':
-            with open('data/server_data', 'r') as f:
-                data = f.read().split('\n')
+            data = list()
+            while not len(data):
+                with open('data/server_data', 'r') as f:
+                    data = f.read().split('\n')
             data[1] = '1'
             with open('data/server_data', 'w') as f:
                 f.write('\n'.join(data))
