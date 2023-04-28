@@ -41,3 +41,22 @@ class Server(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(data[1], "utf-8"))
             else:
                 self.wfile.write(bytes('', "utf-8"))
+
+        elif len(self.path.split('/')) > 2:
+            req = self.path.split('/')
+
+            if req[1] == 'set_pos':
+                data = list()
+                while len(data) < 2:
+                    with open('data/server_data', 'r') as f:
+                        data = f.read().split('#')
+                data[1 + int(req[2])] = req[3] + '\n' + req[4] + '\n'
+                with open('data/server_data', 'w') as f:
+                    f.write('#'.join(data))
+
+            elif req[1] == 'get_pos':
+                data = list()
+                while len(data) < 2:
+                    with open('data/server_data', 'r') as f:
+                        data = f.read().split('#')
+                self.wfile.write(bytes(data[1 + int(req[2])], "utf-8"))

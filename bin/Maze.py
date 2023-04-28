@@ -133,6 +133,20 @@ class Maze:
         if self._matrix[new_pos[0]][new_pos[1]] == 0:
             player.set_pos(new_pos[0], new_pos[1])
 
+    def get_pos(self, n_player):
+        player = self._player_2 if n_player == 2 else self._player_1
+        return player.get_pos()
+
+    def set_pos(self, n_player, pos):
+        player = self._player_2 if n_player == 2 else self._player_1
+        player.set_pos(pos[0], pos[1])
+
+    def set_mp_pos(self, n_player, pos):
+        self._connector.set_mp_pos(n_player, pos)
+
+    def get_mp_pos(self, n_player):
+        return self._connector.get_mp_pos(n_player)
+
     def _calc_path(self, pos_1, pos_2):
         wave_l = 11
         flag = True

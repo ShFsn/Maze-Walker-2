@@ -11,16 +11,29 @@ class GamePage(Page):
         self._timer_state = 0
         self._timer = 0
         self._move_keys = ['w', 'a', 's', 'd', Key.up, Key.left, Key.down, Key.right]
+        self._moved = False
         self._conn_closed = False
         self._time = time.time()
 
     def action(self, key, maze):
         super().action(key, maze)
-        if time.time() - self._time > 0.01 and maze.is_online() and not maze.is_host():
+        if time.time() - self._time > 0.01:
             self._time = time.time()
-            if maze.check_disconnect():
-                self._conn_closed = True
-                return
+            if maze.is_online() and maze.is_host():
+                if self._moved:
+                    maze.set_mp_pos(1, maze.get_pos(1))
+                pos = maze.get_mp_pos(2)
+                if pos != maze.get_pos(2):
+                    maze.set_pos(2, pos)
+            if maze.is_online() and not maze.is_host():
+                if maze.check_disconnect():
+                    self._conn_closed = True
+                    return
+                if self._moved:
+                    maze.set_mp_pos(2, maze.get_pos(2))
+                pos = maze.get_mp_pos(1)
+                if pos != maze.get_pos(1):
+                    maze.set_pos(1, pos)
         if self._timer_state == 0:
             self._time_start = time.time()
             self._timer_state = 1
@@ -51,6 +64,7 @@ class GamePage(Page):
             while key != self._move_keys[i]:
                 i += 1
             maze.move(i // 4 + 1, sides[i % 4])
+            self._moved = True
             self._showed = False
 
     def get_contents(self, maze):

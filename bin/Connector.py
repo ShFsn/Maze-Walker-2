@@ -60,7 +60,7 @@ class Connector:
                 f.write('disconnect')
         with open('data/server_data', 'r') as f:
             data = f.read()
-        while data != 'confirm' and time.time() - start < 5:
+        while data != 'confirm' and time.time() - start < 1:
             with open('data/server_data', 'r') as f:
                 data = f.read()
 
@@ -101,13 +101,40 @@ class Connector:
 
     @staticmethod
     def set_mp_maze(maze_data):
-        data = list()
+        data = ''
         while len(data) < 2:
             with open('data/server_data', 'r') as f:
                 data = f.read()
+            if data.find('#'):
+                data = data.split('#')[0]
             with open('data/server_data', 'w') as f:
                 f.write(data + '\n#' + maze_data + '\n#' + maze_data.split('\n')[2] + '\n' + maze_data.split('\n')[3] +
                         '\n#' + maze_data.split('\n')[4] + '\n' + maze_data.split('\n')[5])
 
     def get_mp_maze(self):
         return self._send_request('/get_maze')
+
+    def set_mp_pos(self, n_player, pos):
+        if n_player == 1:
+            data = list()
+            while len(data) < 2:
+                with open('data/server_data', 'r') as f:
+                    data = f.read().split('#')
+            data[1 + n_player] = str(pos[0]) + '\n' + str(pos[1]) + '\n'
+            with open('data/server_data', 'w') as f:
+                f.write('#'.join(data))
+        if n_player == 2:
+            self._send_request('/set_pos/' + str(n_player) + '/' + str(pos[0]) + '/' + str(pos[1]))
+
+    def get_mp_pos(self, n_player):
+        pos = '0\n0'
+        if n_player == 1:
+            data = list()
+            while len(data) < 2:
+                with open('data/server_data', 'r') as f:
+                    data = f.read().split('#')
+            pos = data[1 + n_player]
+        elif n_player == 2:
+            pos = self._send_request('/get_pos/' + str(n_player))
+        return int(pos.split('\n')[0]), int(pos.split('\n')[1])
+

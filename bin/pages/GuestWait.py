@@ -7,6 +7,7 @@ class GuestWait(Page):
     def __init__(self):
         super().__init__()
         self.contents.append('Waiting for maze creation.')
+        self.contents.append('Press [Backspace] to go back')
         self._time = time.time()
         self._loaded = False
         self._conn_closed = False
@@ -24,6 +25,9 @@ class GuestWait(Page):
                 self._loaded = True
 
     def get_next_state(self, key):
+        res = super().get_next_state(key)
+        if res != '':
+            return res
         if self._loaded:
             return 'GamePage'
         elif self._conn_closed:
