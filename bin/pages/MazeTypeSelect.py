@@ -14,7 +14,6 @@ class MazeTypeMenu(Page):
     def action(self, key, maze):
         super().action(key, maze)
         if key == Key.backspace and not maze.is_single() and maze.is_host():
-            print('test')
             maze.server_stop()
         elif key == '1':
             maze.set_generator('DFS')

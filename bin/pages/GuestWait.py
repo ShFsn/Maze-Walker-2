@@ -21,7 +21,6 @@ class GuestWait(Page):
             elif data != '':
                 maze.set_data(data)
                 self._loaded = True
-            print(data)
 
     def get_next_state(self, key):
         if self._loaded:
