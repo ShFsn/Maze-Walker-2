@@ -16,7 +16,7 @@ class GamePage(Page):
 
     def action(self, key, maze):
         super().action(key, maze)
-        if time.time() - self._time > 0.01:
+        if time.time() - self._time > 0.01 and not maze.is_single() and not maze.is_host():
             self._time = time.time()
             if maze.check_disconnect():
                 self._conn_closed = True
