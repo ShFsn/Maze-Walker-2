@@ -110,8 +110,4 @@ class Connector:
                         '\n#' + maze_data.split('\n')[4] + '\n' + maze_data.split('\n')[5])
 
     def get_mp_maze(self):
-        try:
-            response = self._send_request('/get_maze')
-            return response
-        except:
-            return 'closed'
+        return self._send_request('/get_maze')

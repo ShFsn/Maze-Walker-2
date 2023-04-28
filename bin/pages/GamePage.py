@@ -11,9 +11,16 @@ class GamePage(Page):
         self._timer_state = 0
         self._timer = 0
         self._move_keys = ['w', 'a', 's', 'd', Key.up, Key.left, Key.down, Key.right]
+        self._conn_closed = False
+        self._time = time.time()
 
     def action(self, key, maze):
         super().action(key, maze)
+        if time.time() - self._time > 0.01:
+            self._time = time.time()
+            if maze.check_disconnect():
+                self._conn_closed = True
+                return
         if self._timer_state == 0:
             self._time_start = time.time()
             self._timer_state = 1
@@ -64,10 +71,11 @@ class GamePage(Page):
         return tuple(self.contents)
 
     def get_next_state(self, key):
-        if key == Key.backspace:
+        if key == Key.backspace or self._conn_closed:
             return 'WriteMenu'
         return ''
 
     def exit(self):
         super().exit()
         self._timer_state = 0
+        self._conn_closed = False

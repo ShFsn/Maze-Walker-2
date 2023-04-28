@@ -19,9 +19,7 @@ class GuestWait(Page):
                 self._conn_closed = True
                 return
             data = maze.get_mp_maze()
-            if data == 'closed':
-                self._conn_closed = True
-            elif data != '':
+            if data != '':
                 maze.set_data(data)
                 self._loaded = True
 
