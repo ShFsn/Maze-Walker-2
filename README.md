@@ -31,11 +31,12 @@ Players position is controlled by `w,a,s,d` and `arrows`.
 ## Features
 
 1. You can play the game by yourself or solve mazes with your friend, competing on solving speed. When someone will reach finish, the timer will stop.
-2. Mazes can be generated using two different algorithms: "___Depth-first search___" (__DFS__) and "___Minimal spanning tree___" (__MST__). There's no practical difference between them from the users side though.
-3. You can choose height and width of your future maze. The game will suggest you maximum possible parameters according to your window size. If you want larger mazes to be displayed -- just stretch the window.
-4. There are 3 options for start and finish points available:
+2. You can play with your friend on the same computer or over local network.
+3. Mazes can be generated using two different algorithms: "___Depth-first search___" (__DFS__) and "___Minimal spanning tree___" (__MST__). There's no practical difference between them from the users side though.
+4. You can choose height and width of your future maze. The game will suggest you maximum possible parameters according to your window size. If you want larger mazes to be displayed -- just stretch the window.
+5. There are 3 options for start and finish points available:
    1. First one places them in the corners;
    2. Second one chooses their place randomly;
    3. Third one sticks them to sides randomly.
-5. If you want to continue later (or just have accidentally generated a beautiful maze) you can use save it (with current timer value). There's 5 save slots for singleplayer mode and 5 for multiplayer mode. You can find them in ```saves/``` folder.
-6. If you (or your friend) got lost -- press `[1]` or `[2]` respectively to show the way to finish.
+6. If you want to continue later (or just have accidentally generated a beautiful maze) you can use save it (with current timer value). There's 5 save slots for singleplayer mode and 5 for multiplayer mode. You can find them in ```saves/``` folder.
+7. If you (or your friend) got lost -- press `[1]` or `[2]` respectively to show the way to finish.
