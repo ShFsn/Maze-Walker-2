@@ -25,6 +25,7 @@ class GamePage(Page):
                 pos = maze.get_mp_pos(2)
                 if pos != maze.get_pos(2):
                     maze.set_pos(2, pos)
+                    self._showed = False
             if maze.is_online() and not maze.is_host():
                 if maze.check_disconnect():
                     self._conn_closed = True
@@ -34,6 +35,7 @@ class GamePage(Page):
                 pos = maze.get_mp_pos(1)
                 if pos != maze.get_pos(1):
                     maze.set_pos(1, pos)
+                    self._showed = False
         if self._timer_state == 0:
             self._time_start = time.time()
             self._timer_state = 1
