@@ -21,14 +21,13 @@ class GuestWait(Page):
             elif data != '':
                 maze.set_data(data)
                 self._loaded = True
-        if key == Key.backspace:
-            maze.server_stop()
+            print(data)
 
     def get_next_state(self, key):
         if self._loaded:
             return 'GamePage'
         elif self._conn_closed:
-            return 'ModeMenu'
+            return 'restart'
         return ''
 
     def exit(self):

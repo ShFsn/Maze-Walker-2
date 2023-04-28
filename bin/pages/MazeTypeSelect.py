@@ -1,4 +1,5 @@
 from bin.pages.Page import Page
+from pynput.keyboard import Key
 
 
 class MazeTypeMenu(Page):
@@ -12,15 +13,18 @@ class MazeTypeMenu(Page):
 
     def action(self, key, maze):
         super().action(key, maze)
-        if key == '1':
+        if key == Key.backspace and not maze.is_single() and maze.is_host():
+            print('test')
+            maze.server_stop()
+        elif key == '1':
             maze.set_generator('DFS')
         elif key == '2':
             maze.set_generator('MST')
 
     def get_next_state(self, key):
         res = super().get_next_state(key)
-        if res != '':
-            return res
+        if res == 'prev':
+            return 'restart'
         elif key == '1':
             return 'SizeSelect'
         elif key == '2':
