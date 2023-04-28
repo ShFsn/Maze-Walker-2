@@ -31,6 +31,7 @@ class LoadMenu(SavesMenu):
         return save_num
 
     def action(self, key, maze):
+        super().action(key, maze)
         save_num = self._assert_valid(key, self._saves)
         if save_num < 0:
             return

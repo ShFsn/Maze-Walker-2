@@ -1,6 +1,7 @@
 from random import randint
 from heapq import heappush, heappop
 from bin.Player import Player
+from bin.Connector import Connector
 
 
 class Maze:
@@ -20,6 +21,8 @@ class Maze:
         self._player_2.set_letter('2')
         self._single = True
         self._online = False
+        self._host = False
+        self._connector = Connector()
         with open('data/Tile_entity', 'r') as f:
             self._tile_entity = f.read().split('\n')
         with open('data/Tile_empty', 'r') as f:
@@ -50,8 +53,33 @@ class Maze:
     def set_online(self):
         self._online = True
 
+    def set_host(self):
+        self._host = True
+
+    def set_guest(self):
+        self._host = False
+
     def is_single(self):
         return self._single
+
+    def is_host(self):
+        return self._host
+
+    def server_start(self):
+        return self._connector.server_start()
+
+    def server_stop(self):
+        self._connector.server_stop()
+
+    def check_init(self):
+        return self._connector.check_init()
+
+    def check_guest(self):
+        return self._connector.check_guest()
+
+    def connect_guest(self, address):
+        print('testmaze')
+        return self._connector.connect_guest(address)
 
     def is_finished(self):
         return self._player_1.get_pos() == self._end_point or \
@@ -77,7 +105,8 @@ class Maze:
         self._timer = timer
 
     def move(self, n_player, side):
-        player = self._player_2 if n_player == 2 and not self.is_single() else self._player_1
+        player = self._player_2 if (n_player == 2 and not self._single and not self._online) or \
+                                   (not self._single and self._online and not self._host) else self._player_1
         pos = player.get_pos()
         new_pos = (pos[0] - 1, pos[1]) if side == 'up' \
             else (pos[0], pos[1] - 1) if side == 'left' \

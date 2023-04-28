@@ -13,6 +13,7 @@ class GamePage(Page):
         self._move_keys = ['w', 'a', 's', 'd', Key.up, Key.left, Key.down, Key.right]
 
     def action(self, key, maze):
+        super().action(key, maze)
         if self._timer_state == 0:
             self._time_start = time.time()
             self._timer_state = 1

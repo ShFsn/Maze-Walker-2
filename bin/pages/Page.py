@@ -13,7 +13,8 @@ class Page:
         return tuple(self.contents)
 
     def action(self, key, maze):
-        pass
+        if key == Key.esc:
+            maze.server_stop()
 
     def get_next_state(self, key):
         if key == Key.backspace:

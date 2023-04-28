@@ -25,7 +25,9 @@ class SizeSelect(Page):
         self._field_w_inserted = ''
         self._field_active = 1
 
+    # noinspection DuplicatedCode
     def action(self, key, maze):
+        super().action(key, maze)
         if type(key) != Key and key in string.digits and key != '':
             self._field_h_inserted += (key if self._field_active == 1 else '')
             self._field_h_inserted = '' if self._field_h_inserted == '' or self._field_h_inserted == '0' \
@@ -54,6 +56,7 @@ class SizeSelect(Page):
                 self._field_w_inserted != '':
             maze.set_size(int(self._field_h_inserted), int(self._field_w_inserted))
 
+    # noinspection DuplicatedCode
     def get_contents(self, maze):
         (win_w, win_h) = self._screen.get_win_size()
         if self._showed and win_w == self._win_size[0] and win_h == self._win_size[1]:

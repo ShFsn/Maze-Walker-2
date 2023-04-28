@@ -9,6 +9,7 @@ seq = Sequencer()
 while True:
     kb_event = kb.get_event()
     if type(kb_event) == Key and kb_event == Key.esc:
+        seq.call(kb_event)
         break
     kb.clear_event()
     seq.call(kb_event)

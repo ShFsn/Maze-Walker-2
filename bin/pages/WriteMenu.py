@@ -17,6 +17,7 @@ class WriteMenu(SavesMenu):
         return tuple(self.contents)
 
     def action(self, key, maze):
+        super().action(key, maze)
         save_num = self._assert_valid(key, list())
         if save_num < 0:
             return

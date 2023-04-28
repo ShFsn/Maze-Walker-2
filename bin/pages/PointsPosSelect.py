@@ -10,6 +10,7 @@ class PointsPosSelect(Page):
         self.contents.append('Press [Backspace] to go back')
 
     def action(self, key, maze):
+        super().action(key, maze)
         if key == '1' or key == '2' or key == '3':
             maze.set_points_pos_type(int(key))
             maze.generate()

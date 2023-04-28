@@ -9,6 +9,9 @@ __pycache__/
 # Game saves
 saves/
 
+# Server data
+data/server_data
+
 # C extensions
 *.so
 
