@@ -14,7 +14,8 @@ class PointsPosSelect(Page):
         if key == '1' or key == '2' or key == '3':
             maze.set_points_pos_type(int(key))
             maze.generate()
-            maze.set_mp_maze(maze.get_data())
+            if maze.is_online():
+                maze.set_mp_maze(maze.get_data())
 
     def get_next_state(self, key):
         res = super().get_next_state(key)
