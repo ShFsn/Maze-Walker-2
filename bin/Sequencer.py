@@ -2,6 +2,7 @@ from bin.Screen import Screen
 from bin.Maze import Maze
 from bin.pages.TitleScreen import TitleScreen
 from bin.pages.ModeMenu import ModeMenu
+from bin.pages.ScoresTable import ScoresTable
 from bin.pages.MazeTypeSelect import MazeTypeMenu
 from bin.pages.SizeSelect import SizeSelect
 from bin.pages.PointsPosSelect import PointsPosSelect
@@ -22,6 +23,7 @@ class Sequencer:
         self._maze = Maze()
         self._title_screen = TitleScreen()
         self._mode_menu = ModeMenu()
+        self._scores_table = ScoresTable()
         self._maze_type_menu = MazeTypeMenu()
         self._size_select = SizeSelect()
         self._points_pos_select = PointsPosSelect()
@@ -38,6 +40,8 @@ class Sequencer:
             self._call_page(self._title_screen, key)
         elif self._state == 'ModeMenu':
             self._call_page(self._mode_menu, key)
+        elif self._state == 'ScoresTable':
+            self._call_page(self._scores_table, key)
         elif self._state == 'MazeTypeMenu':
             self._call_page(self._maze_type_menu, key)
         elif self._state == 'SizeSelect':

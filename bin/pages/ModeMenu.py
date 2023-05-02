@@ -7,7 +7,8 @@ class ModeMenu(Page):
         self.contents.append('Select Game Mode:\n'
                              '[1] Single (1 player)\n'
                              '[2] Coop (2 players)\n'
-                             '[3] Net Coop (2 players over local network)')
+                             '[3] Net Coop (2 players over local network)\n'
+                             '[4] Show Scores table')
         self.contents.append('Press [Backspace] to go back')
 
     def action(self, key, maze):
@@ -30,4 +31,6 @@ class ModeMenu(Page):
             return 'MazeTypeMenu'
         elif key == '3':
             return 'HostModeMenu'
+        elif key == '4':
+            return 'ScoresTable'
         return ''

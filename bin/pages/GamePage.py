@@ -65,10 +65,22 @@ class GamePage(Page):
                 scores = str(maze.is_finished()) + ','
                 data = maze.get_data().split('\n')
                 scores += data[0] + ' x ' + data[1] + ','
-                scores += str(self._timer) + ','
+                minutes = str(int(self._timer // 60))
+                while len(minutes) < 2:
+                    minutes = '0' + minutes
+                seconds = str(int(self._timer % 60))
+                while len(seconds) < 2:
+                    seconds = '0' + seconds
+                scores += str(minutes + ':' + seconds) + ','
                 dt = datetime.now()
-                scores += str(dt.day) + '-' + str(dt.month) + '-' + str(dt.year) + ','
-                scores += str(dt.hour) + ':' + str(dt.minute) + ':' + str(dt.second) + '\n'
+                day = str(dt.day // 10) + str(dt.day % 10)
+                month = str(dt.month // 10) + str(dt.month % 10)
+                year = str(dt.year)
+                hour = str(dt.hour // 10) + str(dt.hour % 10)
+                minute = str(dt.minute // 10) + str(dt.minute % 10)
+                second = str(dt.second // 10) + str(dt.second % 10)
+                scores += str(day) + '-' + str(month) + '-' + str(year) + ','
+                scores += str(hour) + ':' + str(minute) + ':' + str(second) + '\n'
                 with open('saves/scores_table.csv', 'w') as f:
                     f.write(scores + old_scores)
         if key == '1' or (key == '2' and not maze.is_single()):
