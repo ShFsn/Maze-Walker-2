@@ -1,6 +1,7 @@
 from bin.pages.Page import Page
 from pynput.keyboard import Key
 import time
+from datetime import datetime
 
 
 class GamePage(Page):
@@ -14,6 +15,7 @@ class GamePage(Page):
         self._moved = False
         self._conn_closed = False
         self._time = time.time()
+        self._is_written = False
 
     def action(self, key, maze):
         super().action(key, maze)
@@ -43,12 +45,32 @@ class GamePage(Page):
             self._timer_state = 1
         if self._timer_state == 1:
             self._time_curr = time.time()
-        if maze.is_finished():
-            self._timer_state = 2
         timer = int(self._time_curr - self._time_start) + maze.get_timer()
         if timer != self._timer:
             self._timer = timer
             self._showed = False
+        if maze.is_finished():
+            self._timer_state = 2
+            if not self._is_written:
+                self._is_written = True
+                # noinspection PyBroadException
+                try:
+                    f = open('saves/scores_table.csv', 'r')
+                    f.close()
+                except:
+                    f = open('saves/scores_table.csv', 'w')
+                    f.close()
+                with open('saves/scores_table.csv', 'r') as f:
+                    old_scores = f.read()
+                scores = str(maze.is_finished()) + ','
+                data = maze.get_data().split('\n')
+                scores += data[0] + ' x ' + data[1] + ','
+                scores += str(self._timer) + ','
+                dt = datetime.now()
+                scores += str(dt.day) + '-' + str(dt.month) + '-' + str(dt.year) + ','
+                scores += str(dt.hour) + ':' + str(dt.minute) + ':' + str(dt.second) + '\n'
+                with open('saves/scores_table.csv', 'w') as f:
+                    f.write(scores + old_scores)
         if key == '1' or (key == '2' and not maze.is_single()):
             maze.hide_path()
             maze.show_path(key)
@@ -59,7 +81,7 @@ class GamePage(Page):
         if key == Key.backspace:
             maze.hide_path()
             maze.set_timer(self._timer)
-            if  maze.is_online() and maze.is_host():
+            if maze.is_online() and maze.is_host():
                 maze.server_disconnect()
                 maze.server_stop()
         if key in self._move_keys:
@@ -97,3 +119,4 @@ class GamePage(Page):
         super().exit()
         self._timer_state = 0
         self._conn_closed = False
+        self._is_written = False

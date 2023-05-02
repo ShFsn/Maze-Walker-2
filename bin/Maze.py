@@ -100,8 +100,8 @@ class Maze:
         return self._connector.get_mp_maze()
 
     def is_finished(self):
-        return self._player_1.get_pos() == self._end_point or \
-               (self._player_2.get_pos() == self._end_point and not self.is_single())
+        return 1 if self._player_1.get_pos() == self._end_point else 2 if \
+               (self._player_2.get_pos() == self._end_point and not self.is_single()) else 0
 
     def set_generator(self, g_t):
         self._generator_type = g_t
