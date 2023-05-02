@@ -11,14 +11,21 @@ class GamePage(Page):
         self._time_curr = time.time()
         self._timer_state = 0
         self._timer = 0
+        self._timer_ai = time.time()
+        self._ai_speed = 1
         self._move_keys = ['w', 'a', 's', 'd', Key.up, Key.left, Key.down, Key.right]
         self._moved = False
         self._conn_closed = False
         self._time = time.time()
         self._is_written = False
+        self._is_finished = False
 
     def action(self, key, maze):
         super().action(key, maze)
+        if time.time() - self._timer_ai > maze.get_AI_delay() and maze.is_with_ai() and not self._is_finished:
+            self._showed = False
+            self._timer_ai = time.time()
+            maze.move_AI()
         if time.time() - self._time > 0.01:
             self._time = time.time()
             if maze.is_online() and maze.is_host():
@@ -50,6 +57,7 @@ class GamePage(Page):
             self._timer = timer
             self._showed = False
         if maze.is_finished():
+            self._is_finished = True
             self._timer_state = 2
             if not self._is_written:
                 self._is_written = True
@@ -132,3 +140,4 @@ class GamePage(Page):
         self._timer_state = 0
         self._conn_closed = False
         self._is_written = False
+        self._is_finished = False

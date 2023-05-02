@@ -20,10 +20,12 @@ class Maze:
         self._player_2 = Player()
         self._player_2.set_letter('2')
         self._single = True
+        self._with_AI = False
         self._online = False
         self._host = False
         self._server_active = False
         self._connector = Connector()
+        self._AI_delay = 1.0
         with open('data/Tile_entity', 'r') as f:
             self._tile_entity = f.read().split('\n')
         with open('data/Tile_empty', 'r') as f:
@@ -43,13 +45,21 @@ class Maze:
         self._player_1.activate()
         self._player_2.deactivate()
         self._single = True
+        self._with_AI = False
         self._online = False
 
     def set_multi(self):
         self._player_1.activate()
         self._player_2.activate()
         self._single = False
+        self._with_AI = False
         self._online = False
+
+    def set_AI(self):
+        self._with_AI = True
+
+    def is_with_ai(self):
+        return self._with_AI
 
     def set_online(self):
         self._online = True
@@ -112,6 +122,12 @@ class Maze:
         self._width = int(width)
         self._act_width = self._width * 2 + 1
 
+    def set_AI_speed(self, spd):
+        self._AI_delay = 1 / spd
+
+    def get_AI_delay(self):
+        return self._AI_delay
+
     def set_points_pos_type(self, pos_type):
         self._points_pos_type = pos_type
         print(self._points_pos_type)
@@ -123,7 +139,7 @@ class Maze:
         self._timer = timer
 
     def move(self, n_player, side):
-        player = self._player_2 if (n_player == 2 and not self._single and not self._online) or \
+        player = self._player_2 if (n_player == 2 and not self._single and not self._online and not self._with_AI) or \
                                    (not self._single and self._online and not self._host) else self._player_1
         pos = player.get_pos()
         new_pos = (pos[0] - 1, pos[1]) if side == 'up' \
@@ -132,6 +148,19 @@ class Maze:
             else (pos[0], pos[1] + 1)
         if self._matrix[new_pos[0]][new_pos[1]] == 0:
             player.set_pos(new_pos[0], new_pos[1])
+
+    def move_AI(self):
+        self.show_path('2')
+        pos = self._player_2.get_pos()
+        if self._matrix[pos[0] - 1][pos[1]] == 2:
+            self.set_pos(2, (pos[0] - 1, pos[1]))
+        elif self._matrix[pos[0] + 1][pos[1]] == 2:
+            self.set_pos(2, (pos[0] + 1, pos[1]))
+        elif self._matrix[pos[0]][pos[1] - 1] == 2:
+            self.set_pos(2, (pos[0], pos[1] - 1))
+        elif self._matrix[pos[0]][pos[1] + 1] == 2:
+            self.set_pos(2, (pos[0], pos[1] + 1))
+        self.hide_path()
 
     def get_pos(self, n_player):
         player = self._player_2 if n_player == 2 else self._player_1
