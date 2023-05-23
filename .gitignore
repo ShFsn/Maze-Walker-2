@@ -3,6 +3,15 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# IDE
+.idea/
+
+# Game saves
+saves/
+
+# Server data
+data/server_data
+
 # C extensions
 *.so
 
